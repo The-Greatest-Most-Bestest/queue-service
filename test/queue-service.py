@@ -1,37 +1,49 @@
 import pytest
 import requests
 
+from queueservice.request_handler import Handler
+
 from bs4 import BeautifulSoup as BS
+
+
+state = [
+    {
+        "id": '0',
+        "queue": ['0', '1', '2']
+    }
+]
 
 @pytest.fixture()
 def request_url():
     return 'https://github.com/RKuttruff/incubator-sdap-nexus/blob/CDMS-122/data-access/tests/test_zarr.py'
-            # URL points to a suite of unit tests I wrote for my internship
 
+
+def mock_query(s):
+    global state
+
+    item = state[0]
+
+    return item['queue']
+
+def mock_update(id, l):
+    global state
+
+    state[0]['queue'] = l
+
+@pytest.fixture(scope='module')
+def mock():
+    handler = Handler()
+
+    handler.proxy.query = mock_query
+    handler.proxy.update = mock_update
+
+    return handler
 
 # We haven't got any backend code to run unit tests against so I will just quickly demo that I know how to write test cases with pytest
 
-def test_passing():
-    assert 4 == (2+2)
-    assert 1 > -43
+def test_enqueue(mock):
+    response = mock.enqueue('4', '0')
 
-def test_failing():
-    assert len("this will fail") == 15
+    assert response['success']
+    assert response['position'] == 4
 
-def test_error():
-    open('this_file_does_not_exist.yml')
-
-def test_request_and_fixture(request_url):
-    response = requests.get(request_url)    # In a unit test this should be mocked out...
-
-    assert response.status_code == 200
-
-    soup = BS(response.text, 'html.parser')
-
-@pytest.mark.skip
-def test_skip():
-    pass
-
-@pytest.mark.xfail
-def test_expected_failure():
-    assert False
