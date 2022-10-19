@@ -22,7 +22,7 @@ def test_error():
     open('this_file_does_not_exist.yml')
 
 def test_request_and_fixture(request_url):
-    response = requests.get(request_url)
+    response = requests.get(request_url)    # In a unit test this should be mocked out...
 
     assert response.status_code == 200
 
