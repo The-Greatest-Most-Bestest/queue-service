@@ -1,7 +1,10 @@
+from operator import truediv
 import re
+from sre_constants import JUMP
+from turtle import Turtle
 import uuid
+import pprint
 import json
-from bson import ObjectId, json_util
 from pymongo import MongoClient
 
 # Helper class for mongodb
@@ -30,7 +33,7 @@ class MongoAPI:
             return data["queue"]
 
         return "Queue not found with specified id."
-        
+
     def update_queue_for_category(self, id: uuid, new_queue_entry: list):
 
         # Connect to queue table (collection) in the database
@@ -41,7 +44,6 @@ class MongoAPI:
 
         # Update the queue with specified id
         queue.update_one({"id": id}, new_value)
-
 
     def get_category_for_item(self, id: str) -> uuid:
 
@@ -67,3 +69,36 @@ class MongoAPI:
                     break
 
         return catagory_uuid
+
+
+url = "mongodb+srv://mfngoi:<password>@cluster0.ltgs7ps.mongodb.net/?retryWrites=true&w=majority"
+password = "UUkHZnMzVW6x9jIo"
+api = MongoAPI(url, password)
+
+# get_queue_for_category example
+queue_id = 1
+data = api.get_queue_for_category(queue_id) # Returns queue array in rows (document)
+for item in data:
+    print(item)
+print()
+
+# update_queue_for_category example
+queue_id = 1
+new_entry = {
+    "queue": {
+        "id": "017775403",
+        "name": "Ramon",
+        "contact_info": {
+            "phone": "123-333-2342",
+            "email": "ramon@mail.com"
+        },
+        "time": "datetime"
+    }
+}
+api.update_queue_for_category(queue_id, new_entry)
+print("Entry added to queue array.")
+print()
+
+# get_category_for_item example
+data = api.get_category_for_item("002085403")   # finds queue_id from queue table using item uuid
+print(data)
