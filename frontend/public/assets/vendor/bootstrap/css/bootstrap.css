@@ -4644,6 +4644,18 @@ textarea.form-control-lg {
   display: none;
 }
 
+.badge-primary {
+  color: #fff;
+  background-color: #007bff;
+}
+
+.badge-primary[href]:hover, .badge-primary[href]:focus {
+  color: #fff;
+  text-decoration: none;
+  background-color: #0062cc;
+}
+
+
 .btn .badge {
   position: relative;
   top: -1px;
