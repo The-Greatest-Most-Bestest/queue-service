@@ -15,7 +15,7 @@ class MongoAPI:
 
         # Create client and connect to database 'queues'
         self.client = MongoClient(cluster_key)
-        self.db = self.client['test_queue_service']     # Refers to database name in MongoDB account
+        self.db = self.client['queue_service']     # Refers to database name in MongoDB account
 
     def get_queue_for_category(self, id: uuid):
 
@@ -29,7 +29,7 @@ class MongoAPI:
         if data:
             return data["queue"]
 
-        return "Queue not found with specified id."
+        return None
         
     def update_queue_for_category(self, id: uuid, new_queue_entry: list):
 
