@@ -1,5 +1,5 @@
 [mdb]
-url=mongodb+srv://rileykk:<password>@cluster0.eqphklu.mongodb.net/?retryWrites=true&w=majority
+url=mongodb+srv://redacted
 password=redacted
 
 [rmq]
