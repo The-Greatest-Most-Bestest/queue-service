@@ -24,7 +24,7 @@ class MongoAPI:
         queue = self.db.get_collection('queue') # !!! Hardcoded Element !!!
         
         # Retrive document (row) with specified id
-        document = queue.find_one({"id": id})
+        document = queue.find_one({"id": str(id)})
 
         # Check if document with id exists in table
         if document:
@@ -38,11 +38,17 @@ class MongoAPI:
         # Connect to queue table in the database
         queue = self.db.get_collection('queue') # !!! Hardcoded Element !!!
 
-        # # Define new value to be pushed to queue array
-        # new_value = {"$push": new_queue_entry}
+        # Create new queue array to set in queue
+        new_queue_array = {
+            "queue": []
+        }
+        for profiles in queue_array:
+            new_queue_array["queue"].append(profiles)
+        # Apply mongo instruction
+        set_queue_array = {"$set": new_queue_array}
 
         # Update the queue with specified id
-        queue.update_one({"id": id}, queue_array)
+        queue.update_one({"id": str(id)}, set_queue_array)
 
     # Searches through the entire collection of 'category' 
     # for the item with the same uuid and returns the uuid of the related category
@@ -57,7 +63,7 @@ class MongoAPI:
                 category_uuid = document["id"]
 
                 for item in document["items"]:
-                    if item == id:
+                    if item == str(id):
                         return category_uuid     
         
         return "No category found"
@@ -83,7 +89,7 @@ class MongoAPI:
         queue = self.db.get_collection('queue') # !!! Hardcoded Element !!!
 
         # Query for document to be deleted
-        query = {"id": id}
+        query = {"id": str(id)}
         queue.delete_one(query)
 
     # Creates a new document (row) in the category table with an empty item array
@@ -112,5 +118,5 @@ class MongoAPI:
         category = self.db.get_collection('category') # !!! Hardcoded Element !!!
 
         # Query for document to be deleted
-        query = {"id": id}
+        query = {"id": str(id)}
         category.delete_one(query)
