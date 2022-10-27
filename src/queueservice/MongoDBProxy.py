@@ -15,7 +15,7 @@ class MongoAPI:
 
         # Create client and connect to database 'queues'
         self.client = MongoClient(cluster_key)
-        self.db = self.client.get_database('test_queue_service') # !!! Hardcoded Element !!!
+        self.db = self.client.get_database('queue_service') # !!! Hardcoded Element !!!
 
     # Retrieve the queue_array with the specified uuid
     def get_queue_for_category(self, id: uuid) -> list:

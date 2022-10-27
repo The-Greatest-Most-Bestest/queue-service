@@ -6,7 +6,7 @@ import json
 from datetime import datetime
 
 config = configparser.ConfigParser()
-config.read_file('config/config.ini')
+config.read_file(open('config/config.ini', 'r'))
 
 mdb = MongoAPI(config.get("mdb", "url"), config.get("mdb", "password"))
 handler = Handler(mdb)
