@@ -27,6 +27,6 @@ class Handler:
         except:
             return json.dumps({
                         "response": 500,
-                        "message": f"User {user['name']}({user['id']}) is already in this queue"
+                        "message": f"An error occurred"
             }), 500
 

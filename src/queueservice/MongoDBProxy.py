@@ -1,7 +1,7 @@
 import re
 import uuid
 import json
-from bson import ObjectId, json_util
+from datetime import datetime
 from pymongo import MongoClient
 
 # Helper class for mongodb
@@ -15,55 +15,108 @@ class MongoAPI:
 
         # Create client and connect to database 'queues'
         self.client = MongoClient(cluster_key)
-        self.db = self.client['queue_service']     # Refers to database name in MongoDB account
+        self.db = self.client.get_database('queue_service') # !!! Hardcoded Element !!!
 
-    def get_queue_for_category(self, id: uuid):
+    # Retrieve the queue_array with the specified uuid
+    def get_queue_for_category(self, id: uuid) -> list:
 
-        # Connect to queue table (collection) in the database
-        queue = self.db['queue']
+        # Connect to queue table in the database
+        queue = self.db.get_collection('queue') # !!! Hardcoded Element !!!
         
-        # Retrive queue with specified id
-        data = queue.find_one({"id": id})
+        # Retrive document (row) with specified id
+        document = queue.find_one({"id": str(id)})
 
-        # Check if queue exists in table
-        if data:
-            return data["queue"]
+        # Check if document with id exists in table
+        if document:
+            return document["queue"]
 
-        return None
-        
-    def update_queue_for_category(self, id: uuid, new_queue_entry: list):
+        return "Queue not found with specified id."
+    
+    # Replace the queue in the specified uuid with the queue_array
+    def update_queue_for_category(self, id: uuid, queue_array: list):
 
-        # Connect to queue table (collection) in the database
-        queue = self.db['queue']
-        
-        # Define new value to be pushed to queue array
-        new_value = {"$push": new_queue_entry}
+        # Connect to queue table in the database
+        queue = self.db.get_collection('queue') # !!! Hardcoded Element !!!
+
+        # Create new queue array to set in queue
+        new_queue_array = {
+            "queue": []
+        }
+        for profiles in queue_array:
+            new_queue_array["queue"].append(profiles)
+        # Apply mongo instruction
+        set_queue_array = {"$set": new_queue_array}
 
         # Update the queue with specified id
-        queue.update_one({"id": id}, new_value)
+        queue.update_one({"id": str(id)}, set_queue_array)
 
+    # Searches through the entire collection of 'category' 
+    # for the item with the same uuid and returns the uuid of the related category
+    def get_category_for_item(self, id: uuid) -> uuid:
+        # Connect to category table in the database
+        category = self.db.get_collection('category') # !!! Hardcoded Element !!!
 
-    def get_category_for_item(self, id: str) -> uuid:
-
-        catagory_uuid = 0
-
-        # Connect to catagory table (collection) in the database
-        queue = self.db['category']
-
-        data = queue.find()
-
+        # Search through entire category table
+        data = category.find()
         if data:
-            for doc in data:
+            for document in data:
+                category_uuid = document["id"]
 
-                catagory_uuid = doc["id"]
-                found_item = False
+                for item in document["items"]:
+                    if item == str(id):
+                        return category_uuid     
+        
+        return "No category found"
 
-                for item in doc["items"]:
-                    if item == id:
-                        found_item = True
-                        break
-                        
-                if found_item:
-                    break
+    # Creates a new document (row) in the queue table (collection) with an empty queue_array
+    def create_queue_document(self, queue_name: str):
+        # Connect to queue table in the database
+        queue = self.db.get_collection('queue') # !!! Hardcoded Element !!!
 
-        return catagory_uuid
+        # Create new document to be inserted to queue collection
+        id = str(uuid.uuid4())
+        document = {
+            "id": id,
+            "queue_name": queue_name,
+            "queue": [],
+        }
+        # Perform insertion
+        queue.insert_one(document)
+
+    # Removes specified document in the queue table
+    def remove_queue_document(self, id: uuid):
+        # Connect to queue table in the database
+        queue = self.db.get_collection('queue') # !!! Hardcoded Element !!!
+
+        # Query for document to be deleted
+        query = {"id": str(id)}
+        queue.delete_one(query)
+
+    # Creates a new document (row) in the category table with an empty item array
+    def create_category_document(self, category_id: uuid, category_name: str, item_name: str):
+        # Connect to queue table in the database
+        category = self.db.get_collection('category') # !!! Hardcoded Element !!!
+
+        # Create new document to be inserted to category collection
+        id = str(category_id)
+        date_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        document = {
+            "id": id,
+            "catagory_name": category_name,
+            "items": [],
+            "name": item_name,
+            "description": "",
+            "img": "",
+            "added_on": date_time
+        }
+        # Perform insertion
+        category.insert_one(document)
+
+    # Removes specified document in the category table
+    def remove_category_document(self, id: uuid):
+        # Connect to queue table in the database
+        category = self.db.get_collection('category') # !!! Hardcoded Element !!!
+
+        # Query for document to be deleted
+        query = {"id": str(id)}
+        category.delete_one(query)
