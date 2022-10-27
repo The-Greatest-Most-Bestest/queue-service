@@ -1,0 +1,6 @@
+[mdb]
+url=mongodb+srv://redacted
+password=redacted
+
+[rmq]
+x=x
