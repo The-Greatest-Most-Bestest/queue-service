@@ -83,6 +83,7 @@ class Handler:
         entry = queue.pop(pos)
 
         self.proxy.append_history(entry, "CANCELLED")
+        self.proxy.update_queue_for_category(cid, queue)
 
         return json.dumps({
             "response": 200,
@@ -134,6 +135,7 @@ class Handler:
             self.publisher.publish(next_user)
 
         self.proxy.append_history(next_user, "NOTIFIED")
+        self.proxy.update_queue_for_category(cid, queue)
 
         return json.dumps({
             "response": 200,
