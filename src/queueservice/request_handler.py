@@ -1,15 +1,32 @@
-from queueservice.MongoDBProxy import MongoDBProxy
-
+from MongoDBProxy import MongoAPI
+import json
 
 class Handler:
-    def __init__(self):
-        self.proxy = MongoDBProxy('temp')
+    def __init__(self, mdb : MongoAPI):
+        self.proxy = mdb
 
-    def enqueue(self, user_id, asset_id):
-        queue = self.proxy.query(f"id={asset_id}")
+    def enqueue(self, user, id):
+        try:
+            queue = self.proxy.get_queue_for_category(id)
 
-        queue.append(user_id)
+            for e in queue:
+                if e['id'] == user['id']:
+                    return json.dumps({
+                        "response": 400,
+                        "message": f"User {user['name']}({user['id']}) is already in this queue"
+                    }), 400
 
-        self.proxy.update(f"id={asset_id}", queue)
+            queue.append(user)
+            self.proxy.update_queue_for_category(id, queue)
 
-        return {'success': True, 'position': len(queue)}
+            return json.dumps({
+                        "response": 200,
+                        "message": f"User {user['name']}({user['id']}) successfully enqueued",
+                        "position": len(queue)
+            }), 200
+        except:
+            return json.dumps({
+                        "response": 500,
+                        "message": f"An error occurred"
+            }), 500
+
