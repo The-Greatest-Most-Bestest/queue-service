@@ -66,7 +66,7 @@ class MongoAPI:
                     if item == str(id):
                         return category_uuid     
         
-        return "No category found"
+        return None
 
     def get_categories(self):
         data = self.db.get_collection('category').find()

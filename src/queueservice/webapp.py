@@ -78,7 +78,11 @@ def cancel():
 
 @app.route('/check-in')
 def checkin():
-    pass
+    item_id = request.args.get('id')
+
+    resp, code = handler.checkin(item_id)
+
+    return resp, code, CT
 
 @app.route('/categories')
 def categories():

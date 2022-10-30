@@ -31,7 +31,8 @@ class Handler:
             }), 500
 
 
-    def __find_in_queue(self, id, queue):
+    @staticmethod
+    def __find_in_queue(id, queue):
         for i, u in enumerate(queue):
             if u['id'] == id:
                 return i
@@ -95,9 +96,43 @@ class Handler:
             return json.dumps({
                 "response": 200,
                 "categories": cats
-            })
+            }), 200
         else:
             return json.dumps({
                 "response": 200,
                 "categories": [c for c in cats if c['space'] == space]
-            })
+            }), 200
+
+    def checkin(self, id) -> tuple[str, int]:
+        cid = self.proxy.get_category_for_item(id)
+
+        if cid is None:
+            return json.dumps({
+                "response": 400,
+                "message": f"No category found for item {id}"
+            }), 400
+
+        queue = self.proxy.get_queue_for_category(cid)
+
+        if queue is None:
+            return json.dumps({
+                "response": 500,
+                "message": f"No queue found for category {cid}. This should not happen! Possible db inconsistency"
+            }), 500
+
+        if len(queue) == 0:
+            return json.dumps({
+                "response": 200,
+                "message": "Checkin successful. Queue is empty so no notification is required"
+            }), 200
+
+        next_user = queue.pop(0)
+
+        # TODO: Notification here
+
+        self.proxy.append_history(next_user, "NOTIFIED")
+
+        return json.dumps({
+            "response": 200,
+            "message": "Checkin successful. Notified next user"
+        }), 200
