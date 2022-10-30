@@ -49,7 +49,7 @@ def enqueue():
             "phone": user_phone,
             "email": user_email
         },
-        "time": datetime.now().isoformat()
+        "time_added": datetime.now().isoformat()
     }
 
 

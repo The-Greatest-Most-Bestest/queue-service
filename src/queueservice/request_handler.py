@@ -30,3 +30,74 @@ class Handler:
                         "message": f"An error occurred"
             }), 500
 
+
+    def __find_in_queue(self, id, queue):
+        for i, u in enumerate(queue):
+            if u['id'] == id:
+                return i
+
+        return -1
+
+    def status(self, cid, uid):
+        queue = self.proxy.get_queue_for_category(cid)
+
+        if queue is None:
+            return json.dumps({
+                "response": 400,
+                "message": f"queue for {cid} not found"
+            }), 400
+
+        pos = self.__find_in_queue(uid, queue)
+
+        if pos == -1:
+            return json.dumps({
+                "response": 400,
+                "message": f"user {uid} not found in queue for {cid}"
+            }), 400
+
+        return json.dumps({
+            "response": 200,
+            "message": pos + 1
+        }), 200
+
+    def cancel(self, cid, uid):
+        queue = self.proxy.get_queue_for_category(cid)
+
+        if queue is None:
+            return json.dumps({
+                "response": 400,
+                "message": f"queue for {cid} not found"
+            }), 400
+
+        pos = self.__find_in_queue(uid, queue)
+
+        if pos == -1:
+            return json.dumps({
+                "response": 400,
+                "message": f"user {uid} not found in queue for {cid}"
+            }), 400
+
+        entry = queue.pop(pos)
+
+        self.proxy.append_history(entry, "CANCELLED")
+
+        return json.dumps({
+            "response": 200,
+            "message": "Successfully cancelled"
+        }), 200
+
+    def categories(self, space):
+        cats = self.proxy.get_categories()
+
+        cats = [{"id": c['id'], "name": c['name'], "space": c['space']} for c in cats]
+
+        if space is None:
+            return json.dumps({
+                "response": 200,
+                "categories": cats
+            })
+        else:
+            return json.dumps({
+                "response": 200,
+                "categories": [c for c in cats if c['space'] == space]
+            })

@@ -30,7 +30,7 @@ class MongoAPI:
         if document:
             return document["queue"]
 
-        return "Queue not found with specified id."
+        return None
     
     # Replace the queue in the specified uuid with the queue_array
     def update_queue_for_category(self, id: uuid, queue_array: list):
@@ -68,6 +68,11 @@ class MongoAPI:
         
         return "No category found"
 
+    def get_categories(self):
+        data = self.db.get_collection('category').find()
+
+        return list(data) if data else []
+
     # Creates a new document (row) in the queue table (collection) with an empty queue_array
     def create_queue_document(self, queue_name: str):
         # Connect to queue table in the database
@@ -93,7 +98,7 @@ class MongoAPI:
         queue.delete_one(query)
 
     # Creates a new document (row) in the category table with an empty item array
-    def create_category_document(self, category_id: uuid, category_name: str, item_name: str):
+    def create_category_document(self, category_id: uuid, category_name: str, item_name: str, space: str):
         # Connect to queue table in the database
         category = self.db.get_collection('category') # !!! Hardcoded Element !!!
 
@@ -102,9 +107,9 @@ class MongoAPI:
         date_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         document = {
             "id": id,
-            "catagory_name": category_name,
+            "name": category_name,
+            "space": space,
             "items": [],
-            "name": item_name,
             "description": "",
             "img": "",
             "added_on": date_time
@@ -120,3 +125,10 @@ class MongoAPI:
         # Query for document to be deleted
         query = {"id": str(id)}
         category.delete_one(query)
+
+    def append_history(self, entry, status : str):
+        entry['status'] = status
+        entry['time_exit'] = datetime.now().isoformat()
+
+        history = self.db.get_collection('history')  # !!! Hardcoded Element !!!
+        history.insert_one(entry)
