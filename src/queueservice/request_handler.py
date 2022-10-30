@@ -1,9 +1,11 @@
 from MongoDBProxy import MongoAPI
+from Notifications import NotificationPublisher
 import json
 
 class Handler:
-    def __init__(self, mdb : MongoAPI):
+    def __init__(self, mdb : MongoAPI, publisher : NotificationPublisher):
         self.proxy = mdb
+        self.publisher = publisher
 
     def enqueue(self, user, id):
         try:
@@ -128,7 +130,8 @@ class Handler:
 
         next_user = queue.pop(0)
 
-        # TODO: Notification here
+        with self.publisher:
+            self.publisher.publish(next_user)
 
         self.proxy.append_history(next_user, "NOTIFIED")
 

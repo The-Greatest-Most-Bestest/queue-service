@@ -4,11 +4,19 @@ from MongoDBProxy import MongoAPI
 from flask import Flask, request
 import json
 from datetime import datetime
+from Notifications import NotificationPublisher
 
 config = configparser.ConfigParser()
 config.read_file(open('config/config.ini', 'r'))
 
 mdb = MongoAPI(config.get("mdb", "url"), config.get("mdb", "password"))
+
+publisher = NotificationPublisher(
+    host=config.get("rmq", "host"),
+    username=config.get("rmq", "username"),
+    password=config.get("rmq", "password")
+)
+
 handler = Handler(mdb)
 
 CT = {"Content-Type": "application/json"}
