@@ -57,5 +57,36 @@ def enqueue():
 
     return resp, code, CT
 
+@app.route('/status')
+def status():
+    cid = request.args.get('cid')
+    uid = request.args.get('uid')
+
+    resp, code = handler.status(cid, uid)
+
+    return resp, code, CT
+
+@app.route('/cancel')
+def cancel():
+    cid = request.args.get('cid')
+    uid = request.args.get('uid')
+
+    resp, code = handler.cancel(cid, uid)
+
+    return resp, code, CT
+
+
+@app.route('/check-in')
+def checkin():
+    pass
+
+@app.route('/categories')
+def categories():
+    space = request.args.get('space')
+
+    resp, code = handler.categories(space)
+
+    return resp, code, CT
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
