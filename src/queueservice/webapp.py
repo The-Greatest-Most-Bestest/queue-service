@@ -17,7 +17,9 @@ publisher = NotificationPublisher(
     password=config.get("rmq", "password")
 )
 
-handler = Handler(mdb)
+publisher.check()
+
+handler = Handler(mdb, publisher)
 
 CT = {"Content-Type": "application/json"}
 

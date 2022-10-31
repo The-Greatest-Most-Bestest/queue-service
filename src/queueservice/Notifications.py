@@ -1,3 +1,5 @@
+import logging
+
 import pika
 import json
 
@@ -16,13 +18,24 @@ class NotificationPublisher:
         self.__connection = None
         self.__channel = None
 
+    def check(self):
+        try:
+            connection = self.__connect()
+            connection.close()
+        except Exception:
+            logging.error("Could not connect to RMQ")
+            raise
+
+
     def __connect(self):
-        self.__connection = pika.BlockingConnection(self.__params)
-        self.__channel = self.__connection.channel()
+        connection = pika.BlockingConnection(self.__params)
+        self.__channel = connection.channel()
         self.__channel.queue_declare(self.__queue, durable=True)
 
+        return connection
+
     def __enter__(self):
-        self.__connect()
+        self.__connection = self.__connect()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
