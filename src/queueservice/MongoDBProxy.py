@@ -160,6 +160,8 @@ class MongoAPI:
 
         category.update_one({"id": str(category_id)}, set_cat_array)
 
+        return str(item_id)
+
     def remove_item(self, category_id, item_id):
         # Connect to category table in the database
         category = self.db.get_collection('category')  # !!! Hardcoded Element !!!
