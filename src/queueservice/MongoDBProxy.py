@@ -74,14 +74,13 @@ class MongoAPI:
         return list(data) if data else []
 
     # Creates a new document (row) in the queue table (collection) with an empty queue_array
-    def create_queue_document(self, queue_name: str):
+    def create_queue_document(self, category_id: uuid, queue_name: str):
         # Connect to queue table in the database
         queue = self.db.get_collection('queue') # !!! Hardcoded Element !!!
 
         # Create new document to be inserted to queue collection
-        id = str(uuid.uuid4())
         document = {
-            "id": id,
+            "id": str(category_id),
             "queue_name": queue_name,
             "queue": [],
         }
@@ -98,7 +97,7 @@ class MongoAPI:
         queue.delete_one(query)
 
     # Creates a new document (row) in the category table with an empty item array
-    def create_category_document(self, category_id: uuid, category_name: str, item_name: str, space: str):
+    def create_category_document(self, category_id: uuid, category_name: str, space: str):
         # Connect to queue table in the database
         category = self.db.get_collection('category') # !!! Hardcoded Element !!!
 
@@ -125,6 +124,31 @@ class MongoAPI:
         # Query for document to be deleted
         query = {"id": str(id)}
         category.delete_one(query)
+
+    def create_category(self, category_name, category_space):
+        id = str(uuid.uuid4())
+
+        self.create_category_document(id, category_name, category_space)
+        self.create_queue_document(id, category_name)
+
+    def update_category_metadata(self, category_id, description, img_url):
+        pass # Not yet implemented
+
+    def delete_category(self, id):
+        id = str(uuid.uuid4())
+
+        self.remove_category_document(id)
+        self.remove_queue_document(id)
+
+    def add_item(self, category_id, item_id=None):
+        if item_id is None:
+            item_id = str(uuid.uuid4())
+
+        #TODO: Ask Matt how to do this
+
+    def remove_item(self, category_id, item_id):
+        pass
+        # TODO: Ask Matt how to do this too
 
     def append_history(self, entry, status : str):
         entry['status'] = status
