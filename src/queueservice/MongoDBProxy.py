@@ -131,6 +131,8 @@ class MongoAPI:
         self.create_category_document(id, category_name, category_space)
         self.create_queue_document(id, category_name)
 
+        return id
+
     def update_category_metadata(self, category_id, description, img_url):
         pass # Not yet implemented
 
