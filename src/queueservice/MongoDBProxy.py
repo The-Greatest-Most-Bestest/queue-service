@@ -103,7 +103,7 @@ class MongoAPI:
 
         # Create new document to be inserted to category collection
         id = str(category_id)
-        date_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        date_time = datetime.now().isoformat(sep='T')
         document = {
             "id": id,
             "name": category_name,
@@ -186,7 +186,7 @@ class MongoAPI:
 
     def append_history(self, entry, status : str):
         entry['status'] = status
-        entry['time_exit'] = datetime.now().isoformat()
+        entry['time_exit'] = datetime.now().isoformat(sep='T')
 
         history = self.db.get_collection('history')  # !!! Hardcoded Element !!!
         history.insert_one(entry)
