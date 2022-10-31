@@ -144,11 +144,41 @@ class MongoAPI:
         if item_id is None:
             item_id = str(uuid.uuid4())
 
-        #TODO: Ask Matt how to do this
+        # Connect to category table in the database
+        category = self.db.get_collection('category')  # !!! Hardcoded Element !!!
+
+        doc = category.find_one({"id": str(category_id)})
+
+        if not doc:
+            return
+
+        item_list = doc['items']
+
+        item_list.append(str(item_id))
+
+        set_cat_array = {"$set": {"items": item_list}}
+
+        category.update_one({"id": str(category_id)}, set_cat_array)
 
     def remove_item(self, category_id, item_id):
-        pass
-        # TODO: Ask Matt how to do this too
+        # Connect to category table in the database
+        category = self.db.get_collection('category')  # !!! Hardcoded Element !!!
+
+        doc = category.find_one({"id": str(category_id)})
+
+        if not doc:
+            return
+
+        item_list = doc['items']
+
+        for i, iid in enumerate(item_list):
+            if iid == str(item_id):
+                item_list.pop(i)
+                break
+
+        set_cat_array = {"$set": {"items": item_list}}
+
+        category.update_one({"id": str(category_id)}, set_cat_array)
 
     def append_history(self, entry, status : str):
         entry['status'] = status
