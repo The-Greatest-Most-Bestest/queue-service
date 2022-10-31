@@ -106,7 +106,7 @@ class Handler:
                 "categories": [c for c in cats if c['space'] == space]
             }), 200
 
-    def checkin(self, id) -> tuple[str, int]:
+    def checkin(self, id):
         cid = self.proxy.get_category_for_item(id)
 
         if cid is None:
