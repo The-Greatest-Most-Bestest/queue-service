@@ -30,7 +30,7 @@ class MongoAPI:
         if document:
             return document["queue"]
 
-        return "Queue not found with specified id."
+        return None
     
     # Replace the queue in the specified uuid with the queue_array
     def update_queue_for_category(self, id: uuid, queue_array: list):
@@ -66,17 +66,21 @@ class MongoAPI:
                     if item == str(id):
                         return category_uuid     
         
-        return "No category found"
+        return None
+
+    def get_categories(self):
+        data = self.db.get_collection('category').find()
+
+        return list(data) if data else []
 
     # Creates a new document (row) in the queue table (collection) with an empty queue_array
-    def create_queue_document(self, queue_name: str):
+    def create_queue_document(self, category_id: uuid, queue_name: str):
         # Connect to queue table in the database
         queue = self.db.get_collection('queue') # !!! Hardcoded Element !!!
 
         # Create new document to be inserted to queue collection
-        id = str(uuid.uuid4())
         document = {
-            "id": id,
+            "id": str(category_id),
             "queue_name": queue_name,
             "queue": [],
         }
@@ -93,18 +97,18 @@ class MongoAPI:
         queue.delete_one(query)
 
     # Creates a new document (row) in the category table with an empty item array
-    def create_category_document(self, category_id: uuid, category_name: str, item_name: str):
+    def create_category_document(self, category_id: uuid, category_name: str, space: str):
         # Connect to queue table in the database
         category = self.db.get_collection('category') # !!! Hardcoded Element !!!
 
         # Create new document to be inserted to category collection
         id = str(category_id)
-        date_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        date_time = datetime.now().isoformat(sep='T')
         document = {
             "id": id,
-            "catagory_name": category_name,
+            "name": category_name,
+            "space": space,
             "items": [],
-            "name": item_name,
             "description": "",
             "img": "",
             "added_on": date_time
@@ -120,3 +124,69 @@ class MongoAPI:
         # Query for document to be deleted
         query = {"id": str(id)}
         category.delete_one(query)
+
+    def create_category(self, category_name, category_space):
+        id = str(uuid.uuid4())
+
+        self.create_category_document(id, category_name, category_space)
+        self.create_queue_document(id, category_name)
+
+        return id
+
+    def update_category_metadata(self, category_id, description, img_url):
+        pass # Not yet implemented
+
+    def delete_category(self, id):
+        id = str(uuid.uuid4())
+
+        self.remove_category_document(id)
+        self.remove_queue_document(id)
+
+    def add_item(self, category_id, item_id=None):
+        if item_id is None:
+            item_id = str(uuid.uuid4())
+
+        # Connect to category table in the database
+        category = self.db.get_collection('category')  # !!! Hardcoded Element !!!
+
+        doc = category.find_one({"id": str(category_id)})
+
+        if not doc:
+            return
+
+        item_list = doc['items']
+
+        item_list.append(str(item_id))
+
+        set_cat_array = {"$set": {"items": item_list}}
+
+        category.update_one({"id": str(category_id)}, set_cat_array)
+
+        return str(item_id)
+
+    def remove_item(self, category_id, item_id):
+        # Connect to category table in the database
+        category = self.db.get_collection('category')  # !!! Hardcoded Element !!!
+
+        doc = category.find_one({"id": str(category_id)})
+
+        if not doc:
+            return
+
+        item_list = doc['items']
+
+        for i, iid in enumerate(item_list):
+            if iid == str(item_id):
+                item_list.pop(i)
+                break
+
+        set_cat_array = {"$set": {"items": item_list}}
+
+        category.update_one({"id": str(category_id)}, set_cat_array)
+
+    def append_history(self, entry, status : str):
+        entry['status'] = status
+        entry['time_exit'] = datetime.now().isoformat(sep='T')
+
+        history = self.db.get_collection('history')  # !!! Hardcoded Element !!!
+        history.insert_one(entry)
