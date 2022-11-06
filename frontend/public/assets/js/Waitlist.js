@@ -10,14 +10,12 @@ function waitlist() {
 	var phone = $('#phone').val();
 
 	// check there all the blanks are filled out
-	if (
-		(name === '') |
-		(uid === '') |
-		(email === '') |
-		(phone === '') |
-		(phone.length !== 12)
-	) {
+	if ((name === '') | (uid === '') | (email === '') | (phone === '')) {
 		alert('Please make sure to fill out all the blanks.');
+		return;
+	} else if (!validatePhoneNumber(phone)) {
+		// validate phone number
+		alert('Please enter the correct format phone number (ex: 909-869-4467).');
 		return;
 	}
 
@@ -45,24 +43,24 @@ function waitlist() {
 			console.log('Success!');
 			console.log(result);
 
-			var billiard = '2cda2c0a-e0f0-4a62-9352-3bfbe76ece41';
-			var ns = '147bda7c-ff1d-424a-abb9-0b76ea714d74';
-			var ps4 = '7a08baeb-7380-4d76-a50f-f874543b397b';
-			var xbox = '5be0be93-933f-4f11-8622-f6b3795a1c48';
-			var pingpong = '48d840c9-0485-4694-bc0c-68216d33acf7';
+			var billiard_id = '2cda2c0a-e0f0-4a62-9352-3bfbe76ece41';
+			var ns_id = '147bda7c-ff1d-424a-abb9-0b76ea714d74';
+			var ps4_id = '7a08baeb-7380-4d76-a50f-f874543b397b';
+			var xbox_id = '5be0be93-933f-4f11-8622-f6b3795a1c48';
+			var pingpong_id = '48d840c9-0485-4694-bc0c-68216d33acf7';
 			var item = '';
 
 			switch (category) {
-				case ns:
+				case ns_id:
 					item = 'Nintendo Switch';
 					break;
-				case ps4:
+				case ps4_id:
 					item = 'PS4';
 					break;
-				case xbox:
+				case xbox_id:
 					item = 'Xbox';
 					break;
-				case pingpong:
+				case pingpong_id:
 					item = 'Ping Pong';
 					break;
 				default:
@@ -80,9 +78,9 @@ function waitlist() {
 			// render the result in the page
 			var waitlists = result;
 			// Billiard
-			if (category === billiard) {
+			if (category === billiard_id) {
 				// update the waitlist table
-				var v =
+				let v =
 					'<tr> <td>Billiard</td> <td>' +
 					name +
 					'</td> <td>' +
@@ -90,16 +88,16 @@ function waitlist() {
 					'</td> </tr>';
 				$('#waitlist_table').append(v);
 				// update the total number of people in billiard waitlist
-				var bill =
+				let bill =
 					"<span class='badge badge-primary badge-pill'>" +
 					waitlists.position +
 					'</span>';
 				$('#bill_position').html(bill);
 			}
 			// Nintendo Swtich
-			else if (category === ns) {
+			else if (category === ns_id) {
 				// update the waitlist table
-				var v =
+				let v =
 					'<tr> <td>Nintendo Switch</td> <td>' +
 					name +
 					'</td> <td>' +
@@ -107,16 +105,16 @@ function waitlist() {
 					'</td> </tr>';
 				$('#waitlist_table').append(v);
 				// update the total number of people in nintendo switch waitlist
-				var ns =
+				let ns =
 					"<span class='badge badge-primary badge-pill'>" +
 					waitlists.position +
 					'</span>';
 				$('#ns_position').html(ns);
 			}
 			// PS4
-			else if (category === ps4) {
+			else if (category === ps4_id) {
 				// update the waitlist table
-				var v =
+				let v =
 					'<tr> <td>PS4</td> <td>' +
 					name +
 					'</td> <td>' +
@@ -124,16 +122,16 @@ function waitlist() {
 					'</td> </tr>';
 				$('#waitlist_table').append(v);
 				// update the total number of people in PS4 waitlist
-				var ps4 =
+				let ps4 =
 					"<span class='badge badge-primary badge-pill'>" +
 					waitlists.position +
 					'</span>';
 				$('#ps4_position').html(ps4);
 			}
 			// Xbox
-			else if (category === xbox) {
+			else if (category === xbox_id) {
 				// update the waitlist table
-				var v =
+				let v =
 					'<tr> <td>Xbox</td> <td>' +
 					name +
 					'</td> <td>' +
@@ -141,16 +139,16 @@ function waitlist() {
 					'</td> </tr>';
 				$('#waitlist_table').append(v);
 				// update the total number of people in xbox waitlist
-				var xbox =
+				let xbox =
 					"<span class='badge badge-primary badge-pill'>" +
 					waitlists.position +
 					'</span>';
 				$('#xbox_position').html(xbox);
 			}
 			// Ping Pong
-			else if (category === pingpong) {
+			else if (category === pingpong_id) {
 				// update the waitlist table
-				var v =
+				let v =
 					'<tr> <td>Ping Pong</td> <td>' +
 					name +
 					'</td> <td>' +
@@ -158,7 +156,7 @@ function waitlist() {
 					'</td> </tr>';
 				$('#waitlist_table').append(v);
 				// update the total number of people in pingpong waitlist
-				var pingpong =
+				let pingpong =
 					"<span class='badge badge-primary badge-pill'>" +
 					waitlists.position +
 					'</span>';
@@ -186,7 +184,7 @@ function waitlist() {
 
 // Sort waitlist on a button click
 function sortTable() {
-	var table, i, x, y, z;
+	var table, i, x, y;
 	table = document.getElementById('waitlist_table');
 	var switching = true;
 
@@ -205,15 +203,23 @@ function sortTable() {
 
 			// check if 3 rows need to be switched
 			if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-				// If yes, mark Switch as needed and break loop
+				// If yes, mark isSwitch as needed and break loop
 				isSwitch = true;
 				break;
 			}
 		}
 		if (isSwitch) {
-			// Function to switch rows and mark switch as completed
+			// Function to switch rows and mark switching as completed
 			rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
 			switching = true;
 		}
 	}
+}
+
+// verify correct phone number format
+function validatePhoneNumber(input_str) {
+	// using Regex to check phone number format
+	var re = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
+
+	return re.test(input_str);
 }
