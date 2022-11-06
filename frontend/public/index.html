@@ -109,11 +109,10 @@
 					<p>The games room has a total of 3 waitlist: Billiards, Consoles, and Ping Pong.</p>
 				</div>
 
-				<form id="waitlistFomr" onsubmit="joinWaitlist(event)"
-        action="http://ec2-18-237-111-121.us-west-2.compute.amazonaws.com/add?id=<category>&name=<user-name>&uid=<user-id>&email=<user-email>&phone=<user-phone>">
+				<form>
 					<div class="mb-3">
 						<label for="item" class="form-label">Item</label>
-						<select name="id" id="id" class="form-select" required>
+						<select id="category_id" class="form-select" required>
 							<option value="2cda2c0a-e0f0-4a62-9352-3bfbe76ece41">Billiard</option>
 							<option value="147bda7c-ff1d-424a-abb9-0b76ea714d74">Consoles - Nintendo Switch</option>
 							<option value="7a08baeb-7380-4d76-a50f-f874543b397b">Consoles - PS4</option>
@@ -121,37 +120,27 @@
 							<option value="48d840c9-0485-4694-bc0c-68216d33acf7">Ping Pong</option>
 						</select>
 					</div>
+					
 					<div class="mb-3">
 						<label for="inputName" class="form-label">First and last name</label>
-						<input type="text" id="name" name="name" class="form-control" required value="billy" />
+						<input type="text" id="name" class="form-control" required />
 					</div>
 					<div class="mb-3">
 						<label for="inputBroncoID" class="form-label">BroncoID number</label>
-						<input type="text" id="uid" name="uid" class="form-control" required value="012345678" />
+						<input type="text" id="uid" class="form-control" required />
 					</div>
 					<div class="mb-3">
 						<label for="inputEmail1" class="form-label">Email address</label>
-						<input type="email" id="email" name="email" class="form-control" placeholder="billy@cpp.edu"
-							aria-describedby="emailHelp" required value="billy@cpp.edu"/>
+						<input type="email" id="email" class="form-control" placeholder="billy@cpp.edu"
+							aria-describedby="emailHelp" required />
 					</div>
 					<div class="mb-3">
 						<label for="inputPhone" class="form-label">Phone number</label>
-						<input type="tel" id="phone" name="phone" class="form-control" placeholder="555-555-5555" required value="555-555-5555" />
+						<input type="tel" id="phone" class="form-control" placeholder="555-555-5555" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required />
 						<div class="form-text">We'll never share your phone number with anyone else.</div>
 					</div>
-					<button type="submit" class="btn btn-primary" id="submit-waitlist">Submit</button>
+					<button type="submit" onclick="waitlist()" class="btn btn-primary">Submit</button>
 				</form>
-
-        <!-- <script>
-          function joinWaitlist(e) {
-            e.preventDefault();
-            
-            
-
-            fetch("http://ec2-18-237-111-121.us-west-2.compute.amazonaws.com/add?id=<category>&name=<user-name>&uid=<user-id>&email=<user-email>&phone=<user-phone>");
-          }
-				</script> -->
-
 			</div>
 		</section><!-- End About Us Section -->
 
@@ -161,57 +150,34 @@
 
 				<div class="section-title">
 					<h2>Waitlist Status</h2>
-					<!-- <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p> -->
 				</div>
 
 				<!-- ==== WAITLIST STATUS LIST ==== -->
 				<ul class="list-group" id="list">
 					<li class="list-group-item d-flex justify-content-between align-items-center">
 						Billiard
-						<span class="badge badge-primary badge-pill">14</span>
+						<span id="bill_position" class="badge badge-primary badge-pill">0</span>
 					</li>
 					<li class="list-group-item d-flex justify-content-between align-items-center">
 						Consoles - Nintendo Switch
-						<span class="badge badge-primary badge-pill">2</span>
+						<span id="ns_position" class="badge badge-primary badge-pill">0</span>
 					</li>
 					<li class="list-group-item d-flex justify-content-between align-items-center">
 						Consoles - PS4
-						<span class="badge badge-primary badge-pill">1</span>
+						<span id="ps4_position" class="badge badge-primary badge-pill">0</span>
 					</li>
 					<li class="list-group-item d-flex justify-content-between align-items-center">
 						Consoles - Xbox
-						<span class="badge badge-primary badge-pill">1</span>
+						<span id="xbox_position" class="badge badge-primary badge-pill">0</span>
 					</li>
 					<li class="list-group-item d-flex justify-content-between align-items-center">
 						Ping Pong
-						<span class="badge badge-primary badge-pill">1</span>
+						<span id="pingpong_position" class="badge badge-primary badge-pill">0</span>
 					</li>
-					<br>
+					<br/>
 				</ul>
 
-				<!-- <script>
-					var id = ["2cda2c0a-e0f0-4a62-9352-3bfbe76ece41",
-						"48d840c9-0485-4694-bc0c-68216d33acf7", "147bda7c-ff1d-424a-abb9-0b76ea714d74",
-						"7a08baeb-7380-4d76-a50f-f874543b397b", "5be0be93-933f-4f11-8622-f6b3795a1c48"]
-
-					var name = "";
-					var uid = "";
-					var email = "";
-					var phone = "";
-
-					//fetch('http://ec2-18-237-111-121.us-west-2.compute.amazonaws.com/add?id='+id+'&name='+name+'&uid='+uid+'&email='+email+'&phone='+phone)
-					fetch('http://ec2-18-237-111-121.us-west-2.compute.amazonaws.com/add?id=5be0be93-933f-4f11-8622-f6b3795a1c48&name=bob&uid=333222111&email=bob%40cpp.edu&phone=555-555-5555')
-						.then(response => {
-							console.log(response);
-							return response.json();
-						})
-						.then(json => {
-							console.log(json);
-							document.getElementById('list').src = URL.createObjectURL(json);
-						})
-				</script> -->
-
-				<div class="row">
+				<!-- <div class="row">
 					<div class="col-lg-12 d-flex justify-content-center">
 						<ul id="portfolio-flters">
 							<li data-filter="*" class="filter-active">All</li>
@@ -224,63 +190,22 @@
 							<li data-filter=".filter-pp">Ping Pong</li>
 						</ul>
 					</div>
-				</div>
+				</div> -->
 
-				<button class="btn btn-primary" onclick="sortTable()">Sort</button></p>
+				<button class="btn btn-primary" onclick="sortTable()">Sort Waitlist</button></p>
 				<ul class="list-group" id="myList">
 
-					<table id="myTable">
+					<table id="waitlist_table">
 						<tr>
 							<th>Item</th>
 							<th>Name</th>
 							<th>Position</th>
 						</tr>
-						<tr>
-							<td>Ping Pong</td>
-							<td>Berglunds snabbkop</td>
-							<td>1</td>
-						</tr>
-						<tr>
-							<td>Billiard</td>
-							<td>North/South</td>
-							<td>3</td>
-						</tr>
-						<tr>
-							<td>Billiard</td>
-							<td>Alfreds Futterkiste</td>
-							<td>2</td>
-						</tr>
-						<tr>
-							<td>Ping Pong</td>
-							<td>Koniglich Essen</td>
-							<td>5</td>
-						</tr>
-						<tr>
-							<td>Billiard</td>
-							<td>Magazzini Alimentari Riuniti</td>
-							<td>4</td>
-						</tr>
-						<tr>
-							<td>Consoles - Nintendo Switch</td>
-							<td>Paris specialites</td>
-							<td>7</td>
-						</tr>
-						<tr>
-							<td>Consoles - Xbox</td>
-							<td>Island Trading</td>
-							<td>6</td>
-						</tr>
-						<tr>
-							<td>Consoles - PS4</td>
-							<td>Laughing Bacchus Winecellars</td>
-							<td>8</td>
-						</tr>
 					</table>
 				</ul>
-				<br>
+				<br/>
 
-
-				<div class="row portfolio-container">
+				<!-- <div class="row portfolio-container">
 					<div class="col-lg-4 col-md-6 portfolio-item filter-web">
 						<div class="portfolio-wrap">
 							<img src="assets/img/portfolio/portfolio-2.jpg" class="img-fluid" alt="">
@@ -309,9 +234,7 @@
 								</div>
 							</div>
 						</div>
-					</div>
-
-
+					</div> -->
 
 				</div>
 
@@ -485,24 +408,24 @@
 
 	</main><!-- End #main -->
 
-	<!-- ======= Footer ======= -->
-	<footer id="footer">
-		<div class="container">
-			<h3>Games Room Etc.</h3>
-			<!-- <p>Et aut eum quis fuga eos sunt ipsa nihil. Labore corporis magni eligendi fuga maxime saepe commodi placeat.</p> -->
-			/p> -->
-			<div class="copyright">
-				&copy; Copyright <strong><span>Games Room Etc.</span></strong>. All Rights Reserved
-			</div>
-			<div class="credits">
-				<!-- All the links in the footer should remain intact. -->
-				<!-- You can delete the links only if you purchased the pro version. -->
-				<!-- Licensing information: https://      <p>Et aut eum quis fuga eos sunt ipsa nihil. Labore corporis magni eligendi fuga maxime saepe commodi placeat.</p>
-green-free-one-page-bootstrap-template/ -->
-				Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-			</div>
-		</div>
-	</footer><!-- End Footer -->
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+    <div class="container">
+      <h3>Games Room Etc.</h3>
+      <!-- <p>Et aut eum quis fuga eos sunt ipsa nihil. Labore corporis magni eligendi fuga maxime saepe commodi placeat.</p> -->
+      
+	  <div class="copyright">
+        &copy; Copyright <strong><span>Games Room Etc.</span></strong> All Rights Reserved
+      </div>
+      <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/green-free-one-page-bootstrap-template/ -->
+        <!-- Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> -->
+      </div>
+    </div>
+  </footer><!-- End Footer -->
 
 	<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
 			class="bi bi-arrow-up-short"></i></a>
@@ -518,7 +441,7 @@ green-free-one-page-bootstrap-template/ -->
 	<script src="assets/js/main.js"></script>
 
 	<!-- Waitlist JS File -->
-	<script src="assets/js/form.js"></script>
+	<script src="assets/js/Waitlist.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"> </script>
