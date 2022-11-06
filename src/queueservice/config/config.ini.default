@@ -1,6 +1,8 @@
 [mdb]
-url=mongodb+srv://redacted
-password=redacted
+url=mongodb+srv://<your-mdb-path>
+password=<your-mdb-password>
 
 [rmq]
-x=x
+host=localhost
+username=<your-rmq-username>
+password=your-<rmq-password>
