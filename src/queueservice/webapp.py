@@ -2,6 +2,7 @@ from request_handler import Handler
 import configparser
 from MongoDBProxy import MongoAPI
 from flask import Flask, request
+from flask_cors import CORS
 import json
 from datetime import datetime
 from Notifications import NotificationPublisher
@@ -24,6 +25,7 @@ handler = Handler(mdb, publisher)
 CT = {"Content-Type": "application/json"}
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/add')
 def enqueue():

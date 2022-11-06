@@ -13,7 +13,7 @@ class NotificationPublisher:
         self.__queue = 'qs-notifications'
 
         self.__creds = pika.PlainCredentials(username, password)
-        self.__params = pika.ConnectionParameters(host=host, credentials=self.__creds)
+        self.__params = pika.ConnectionParameters(host=host, port=5672, credentials=self.__creds)
 
         self.__connection = None
         self.__channel = None
