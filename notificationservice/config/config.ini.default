@@ -1,0 +1,8 @@
+[rmq]
+host=localhost
+username=<your-rmq-username>
+password=your-<rmq-password>
+
+[aws]
+aws_access_key_id=<key-id>
+aws_secret_access_key=<secret-access-key>

@@ -3,6 +3,6 @@ url=mongodb+srv://<your-mdb-path>
 password=<your-mdb-password>
 
 [rmq]
-host=localhost
+host=rmq
 username=<your-rmq-username>
 password=your-<rmq-password>
