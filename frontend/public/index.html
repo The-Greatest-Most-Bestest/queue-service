@@ -38,7 +38,7 @@
   ======================================================== -->
 </head>
 
-<body>
+<body onload="getCategoryID()">
 
 	<!-- ======= Top Bar ======= -->
 	<section id="topbar" class="d-flex align-items-center">
@@ -113,7 +113,7 @@
 					<div class="mb-3">
 						<label for="item" class="form-label">Item</label>
 						<select id="category_id" class="form-select" required>
-							<option value="2cda2c0a-e0f0-4a62-9352-3bfbe76ece41">Billiard</option>
+							<option value="2cda2c0a-e0f0-4a62-9352-3bfbe76ece41">Billiards</option>
 							<option value="147bda7c-ff1d-424a-abb9-0b76ea714d74">Consoles - Nintendo Switch</option>
 							<option value="7a08baeb-7380-4d76-a50f-f874543b397b">Consoles - PS4</option>
 							<option value="5be0be93-933f-4f11-8622-f6b3795a1c48">Consoles - XBox</option>
@@ -152,45 +152,22 @@
 					<h2>Waitlist Status</h2>
 				</div>
 
-				<!-- ==== WAITLIST STATUS LIST ==== -->
-				<ul class="list-group" id="list">
-					<li class="list-group-item d-flex justify-content-between align-items-center">
-						Billiard
-						<span id="bill_position" class="badge badge-primary badge-pill">0</span>
-					</li>
-					<li class="list-group-item d-flex justify-content-between align-items-center">
-						Consoles - Nintendo Switch
-						<span id="ns_position" class="badge badge-primary badge-pill">0</span>
-					</li>
-					<li class="list-group-item d-flex justify-content-between align-items-center">
-						Consoles - PS4
-						<span id="ps4_position" class="badge badge-primary badge-pill">0</span>
-					</li>
-					<li class="list-group-item d-flex justify-content-between align-items-center">
-						Consoles - Xbox
-						<span id="xbox_position" class="badge badge-primary badge-pill">0</span>
-					</li>
-					<li class="list-group-item d-flex justify-content-between align-items-center">
-						Ping Pong
-						<span id="pingpong_position" class="badge badge-primary badge-pill">0</span>
-					</li>
-					<br/>
-				</ul>
-
-				<!-- <div class="row">
-					<div class="col-lg-12 d-flex justify-content-center">
-						<ul id="portfolio-flters">
-							<li data-filter="*" class="filter-active">All</li>
-							<li data-filter=".filter-app">App</li>
-							<li data-filter=".filter-web">Web</li>
-							<li data-filter=".filter-billiard">Billiard</li>
-							<li data-filter=".filter-ns">Consoles - Nintendo Swtich</li>
-							<li data-filter=".filter-ps4">Consoles - PS4</li>
-							<li data-filter=".filter-xbox">Consoles - Xbox</li>
-							<li data-filter=".filter-pp">Ping Pong</li>
-						</ul>
+				<div>
+					<div class="mb-3">
+						<label for="item" class="form-label">Item</label>
+						<select id="category_id_status" class="form-select" required>
+							<!-- <option value="2cda2c0a-e0f0-4a62-9352-3bfbe76ece41">Billiards</option> -->
+							<option value="147bda7c-ff1d-424a-abb9-0b76ea714d74">Consoles - Nintendo Switch</option>
+						</select>
 					</div>
-				</div> -->
+					<div class="mb-3">
+						<label for="inputBroncoID" class="form-label">BroncoID number</label>
+						<input type="text" id="uid_status" class="form-control" required />
+					</div>
+					<button type="submit" onclick="checkPosition()" class="btn btn-primary">Check Position</button>
+				</div>
+
+				<br/> <br/>
 
 				<button class="btn btn-primary" onclick="sortTable()">Sort Waitlist</button></p>
 				<ul class="list-group" id="myList">
@@ -204,38 +181,6 @@
 					</table>
 				</ul>
 				<br/>
-
-				<!-- <div class="row portfolio-container">
-					<div class="col-lg-4 col-md-6 portfolio-item filter-web">
-						<div class="portfolio-wrap">
-							<img src="assets/img/portfolio/portfolio-2.jpg" class="img-fluid" alt="">
-							<div class="portfolio-info">
-								<h4>Web 3</h4>
-								<p>Web</p>
-								<div class="portfolio-links">
-									<a href="assets/img/portfolio/portfolio-2.jpg" data-gallery="portfolioGallery"
-										class="portfolio-lightbox" title="Web 3"><i class="bx bx-plus"></i></a>
-									<a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-lg-4 col-md-6 portfolio-item filter-app">
-						<div class="portfolio-wrap">
-							<img src="assets/img/portfolio/portfolio-3.jpg" class="img-fluid" alt="">
-							<div class="portfolio-info">
-								<h4>App 2</h4>
-								<p>App</p>
-								<div class="portfolio-links">
-									<a href="assets/img/portfolio/portfolio-3.jpg" data-gallery="portfolioGallery"
-										class="portfolio-lightbox" title="App 2"><i class="bx bx-plus"></i></a>
-									<a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
-								</div>
-							</div>
-						</div>
-					</div> -->
-
 				</div>
 
 			</div>
