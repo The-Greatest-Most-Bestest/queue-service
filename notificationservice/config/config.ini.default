@@ -2,7 +2,9 @@
 host=localhost
 username=<your-rmq-username>
 password=your-<rmq-password>
+queue=<queue-name>
 
 [aws]
 aws_access_key_id=<key-id>
 aws_secret_access_key=<secret-access-key>
+aws_region=<region>

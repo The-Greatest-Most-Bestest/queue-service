@@ -64,7 +64,7 @@ class MongoAPI:
 
                 for item in document["items"]:
                     if item == str(id):
-                        return category_uuid     
+                        return category_uuid, document['name']
         
         return None
 

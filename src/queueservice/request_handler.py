@@ -107,7 +107,7 @@ class Handler:
             }), 200
 
     def checkin(self, id):
-        cid = self.proxy.get_category_for_item(id)
+        cid, name = self.proxy.get_category_for_item(id)
 
         if cid is None:
             return json.dumps({
@@ -130,6 +130,8 @@ class Handler:
             }), 200
 
         next_user = queue.pop(0)
+
+        next_user['item'] = name
 
         with self.publisher:
             self.publisher.publish(next_user)
