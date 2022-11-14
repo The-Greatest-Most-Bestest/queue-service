@@ -1,9 +1,59 @@
 /* eslint-disable no-undef */
+var categoriesList; // global variable
+function getCategoryID() {
+	// send HTTP request to get the categories IDs
+	$.ajax({
+		url: 'http://cpp-queue.com/categories?space=games-room',
+
+		success: function (result) {
+			console.log('categories success!');
+			console.log(result.categories);
+
+			// store the results to categoriesList
+			categoriesList = result.categories;
+
+			// create/update category drop down menu for the waitlist form and status
+			$('#category_id').empty();
+			$('#category_id_status').empty();
+			for (let i = 0; i < categoriesList.length; i++) {
+				let item_id = categoriesList[i].id;
+				let item_name = categoriesList[i].name;
+
+				let category_item_list =
+					"<option value='" + item_id + "'>" + item_name + '</option>';
+				$('#category_id').append(category_item_list);
+				$('#category_id_status').append(category_item_list);
+
+				// // create waitlist status list === NOT FIXED ===
+				// let item_count_id = item_name.replaceAll(' ', '-') + '_count';
+				// let item_count_title_id =
+				// 	item_name.replaceAll(' ', '-') + '_count_title';
+				// let span_syntax =
+				// 	'<span ' +
+				// 	item_count_id +
+				// 	" class='badge badge-primary badge-pill'>0</span>";
+				// let div_syntax =
+				// 	'<div id=' +
+				// 	item_count_title_id +
+				// 	"class='list-group-item d-flex justify-content-between align-items-center'>" +
+				// 	item_name +
+				// 	' ' +
+				// 	span_syntax +
+				// 	'</div>';
+
+				// console.log(div_syntax);
+				// $('#waitlist-list').append(div_syntax);
+			}
+		},
+	});
+}
+
+// join waitlist function
 function waitlist() {
 	console.log('clicked!');
 
 	// get the input
-	var category = $('#category_id').val();
+	var category_id = $('#category_id').val();
 	var name = $('#name').val();
 	var uid = $('#uid').val();
 	var email = $('#email').val();
@@ -20,17 +70,17 @@ function waitlist() {
 	}
 
 	// console log
-	console.log('Item id: ' + category);
+	console.log('Item id: ' + category_id);
 	console.log('Name: ' + name);
 	console.log('UID: ' + uid);
 	console.log('Email: ' + email);
 	console.log('Phone: ' + phone);
 
-	//send the HTTP request
+	//send the HTTP request to join waitlist
 	$.ajax({
 		url:
 			'http://cpp-queue.com/add?id=' +
-			category +
+			category_id +
 			'&name=' +
 			name +
 			'&uid=' +
@@ -43,28 +93,12 @@ function waitlist() {
 			console.log('Success!');
 			console.log(result);
 
-			var billiard_id = '2cda2c0a-e0f0-4a62-9352-3bfbe76ece41';
-			var ns_id = '147bda7c-ff1d-424a-abb9-0b76ea714d74';
-			var ps4_id = '7a08baeb-7380-4d76-a50f-f874543b397b';
-			var xbox_id = '5be0be93-933f-4f11-8622-f6b3795a1c48';
-			var pingpong_id = '48d840c9-0485-4694-bc0c-68216d33acf7';
 			var item = '';
-
-			switch (category) {
-				case ns_id:
-					item = 'Nintendo Switch';
-					break;
-				case ps4_id:
-					item = 'PS4';
-					break;
-				case xbox_id:
-					item = 'Xbox';
-					break;
-				case pingpong_id:
-					item = 'Ping Pong';
-					break;
-				default:
-					item = 'Billiard';
+			// get item name
+			for (let i = 0; i < categoriesList.length; i++) {
+				if (category_id === categoriesList[i].id) {
+					item = categoriesList[i].name;
+				}
 			}
 
 			alert(
@@ -77,90 +111,21 @@ function waitlist() {
 
 			// render the result in the page
 			var waitlists = result;
-			// Billiard
-			if (category === billiard_id) {
-				// update the waitlist table
-				let v =
-					'<tr> <td>Billiard</td> <td>' +
-					name +
-					'</td> <td>' +
-					waitlists.position +
-					'</td> </tr>';
-				$('#waitlist_table').append(v);
-				// update the total number of people in billiard waitlist
-				let bill =
-					"<span class='badge badge-primary badge-pill'>" +
-					waitlists.position +
-					'</span>';
-				$('#bill_position').html(bill);
-			}
-			// Nintendo Swtich
-			else if (category === ns_id) {
-				// update the waitlist table
-				let v =
-					'<tr> <td>Nintendo Switch</td> <td>' +
-					name +
-					'</td> <td>' +
-					waitlists.position +
-					'</td> </tr>';
-				$('#waitlist_table').append(v);
-				// update the total number of people in nintendo switch waitlist
-				let ns =
-					"<span class='badge badge-primary badge-pill'>" +
-					waitlists.position +
-					'</span>';
-				$('#ns_position').html(ns);
-			}
-			// PS4
-			else if (category === ps4_id) {
-				// update the waitlist table
-				let v =
-					'<tr> <td>PS4</td> <td>' +
-					name +
-					'</td> <td>' +
-					waitlists.position +
-					'</td> </tr>';
-				$('#waitlist_table').append(v);
-				// update the total number of people in PS4 waitlist
-				let ps4 =
-					"<span class='badge badge-primary badge-pill'>" +
-					waitlists.position +
-					'</span>';
-				$('#ps4_position').html(ps4);
-			}
-			// Xbox
-			else if (category === xbox_id) {
-				// update the waitlist table
-				let v =
-					'<tr> <td>Xbox</td> <td>' +
-					name +
-					'</td> <td>' +
-					waitlists.position +
-					'</td> </tr>';
-				$('#waitlist_table').append(v);
-				// update the total number of people in xbox waitlist
-				let xbox =
-					"<span class='badge badge-primary badge-pill'>" +
-					waitlists.position +
-					'</span>';
-				$('#xbox_position').html(xbox);
-			}
-			// Ping Pong
-			else if (category === pingpong_id) {
-				// update the waitlist table
-				let v =
-					'<tr> <td>Ping Pong</td> <td>' +
-					name +
-					'</td> <td>' +
-					waitlists.position +
-					'</td> </tr>';
-				$('#waitlist_table').append(v);
-				// update the total number of people in pingpong waitlist
-				let pingpong =
-					"<span class='badge badge-primary badge-pill'>" +
-					waitlists.position +
-					'</span>';
-				$('#pingpong_position').html(pingpong);
+			for (let i = 0; i < categoriesList.length; i++) {
+				if (category_id === categoriesList[i].id) {
+					let item_name = categoriesList[i].name;
+
+					// update the waitlist table
+					let v =
+						'<tr> <td>' +
+						item_name +
+						'</td> <td>' +
+						name +
+						'</td> <td>' +
+						waitlists.position +
+						'</td> </tr>';
+					$('#waitlist_table').append(v);
+				}
 			}
 		},
 		// Failed to send HTTP request: user is already in the waitlist
@@ -174,8 +139,7 @@ function waitlist() {
 	});
 
 	// Clear form after submitting
-	document.getElementById('category_id').value =
-		'2cda2c0a-e0f0-4a62-9352-3bfbe76ece41';
+	document.getElementById('category_id').value = category_id;
 	document.getElementById('name').value = '';
 	document.getElementById('uid').value = '';
 	document.getElementById('email').value = '';
@@ -222,4 +186,54 @@ function validatePhoneNumber(input_str) {
 	var re = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
 
 	return re.test(input_str);
+}
+
+// returns the position in line
+function checkPosition() {
+	console.log('clicked!');
+
+	// get the input
+	var category_id = $('#category_id_status').val();
+	var uid = $('#uid_status').val();
+
+	// check there all the blanks are filled out
+	if (uid === '') {
+		alert('Please make sure to fill out all the blanks.');
+		return;
+	}
+
+	$.ajax({
+		url: 'http://cpp-queue.com/status?cid=' + category_id + '&uid=' + uid,
+
+		// send HTTP request
+		success: function (result) {
+			console.log('check position success!');
+			console.log(result.categories);
+
+			// store the results
+			var position = result.message;
+
+			// get item name
+			var item = '';
+			for (let i = 0; i < categoriesList.length; i++) {
+				if (category_id === categoriesList[i].id) {
+					item = categoriesList[i].name;
+				}
+			}
+
+			alert('Your waitlist position for ' + item + ' is ' + position + '.');
+		},
+
+		// Failed to send HTTP request: user is not in the waitlist or wrong BroncoID
+		error: function (result) {
+			console.log('Error!');
+
+			alert(
+				'Waitlist position not found. \nPlease enter a valid BroncoID number.'
+			);
+		},
+	});
+
+	// clear uid_status value
+	document.getElementById('uid_status').value = '';
 }
