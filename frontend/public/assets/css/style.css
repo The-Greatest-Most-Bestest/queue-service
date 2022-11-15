@@ -117,6 +117,8 @@ h6 {
   height: 70px;
 }
 
+/* might not need */
+
 #header.header-scrolled {
   box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
 }
@@ -131,12 +133,13 @@ h6 {
   text-transform: uppercase;
 }
 
+
 #header .logo a {
   color: #5cb874;
 }
-
+/* DONT NEED*/
 #header .logo img {
-  max-height: 40px;
+  max-height: 100px;
 }
 
 .scrolled-offset {
