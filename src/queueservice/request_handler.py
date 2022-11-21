@@ -9,7 +9,7 @@ class Handler:
 
     def enqueue(self, user, id):
         try:
-            queue = self.proxy.get_queue_for_category(id)
+            queue, _ = self.proxy.get_queue_for_category(id)
 
             for e in queue:
                 if e['id'] == user['id']:
@@ -64,7 +64,7 @@ class Handler:
         }), 200
 
     def cancel(self, cid, uid):
-        queue = self.proxy.get_queue_for_category(cid)
+        queue, _ = self.proxy.get_queue_for_category(cid)
 
         if queue is None:
             return json.dumps({
@@ -107,20 +107,20 @@ class Handler:
             }), 200
 
     def checkin(self, id):
-        cid, name = self.proxy.get_category_for_item(id)
-
-        if cid is None:
-            return json.dumps({
-                "response": 400,
-                "message": f"No category found for item {id}"
-            }), 400
-
-        queue = self.proxy.get_queue_for_category(cid)
+        # cid, name = self.proxy.get_category_for_item(id)
+        #
+        # if cid is None:
+        #     return json.dumps({
+        #         "response": 400,
+        #         "message": f"No category found for item {id}"
+        #     }), 400
+        #
+        queue, name = self.proxy.get_queue_for_category(id)
 
         if queue is None:
             return json.dumps({
                 "response": 500,
-                "message": f"No queue found for category {cid}. This should not happen! Possible db inconsistency"
+                "message": f"No queue found for category {id}."
             }), 500
 
         if len(queue) == 0:
@@ -137,7 +137,7 @@ class Handler:
             self.publisher.publish(next_user)
 
         self.proxy.append_history(next_user, "NOTIFIED")
-        self.proxy.update_queue_for_category(cid, queue)
+        self.proxy.update_queue_for_category(id, queue)
 
         return json.dumps({
             "response": 200,

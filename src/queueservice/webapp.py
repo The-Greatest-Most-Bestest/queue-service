@@ -96,9 +96,9 @@ def cancel():
 
 @app.route('/check-in')
 def checkin():
-    item_id = request.args.get('id')
+    category_id = request.args.get('id')
 
-    resp, code = handler.checkin(item_id)
+    resp, code = handler.checkin(category_id)
 
     return resp, code, CT
 

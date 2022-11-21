@@ -4,6 +4,8 @@ import json
 from datetime import datetime
 from pymongo import MongoClient
 
+from typing import Tuple
+
 # Helper class for mongodb
 class MongoAPI:
 
@@ -18,7 +20,7 @@ class MongoAPI:
         self.db = self.client.get_database('queue_service') # !!! Hardcoded Element !!!
 
     # Retrieve the queue_array with the specified uuid
-    def get_queue_for_category(self, id: uuid) -> list:
+    def get_queue_for_category(self, id: uuid) -> Tuple[list, str]:
 
         # Connect to queue table in the database
         queue = self.db.get_collection('queue') # !!! Hardcoded Element !!!
@@ -28,7 +30,7 @@ class MongoAPI:
 
         # Check if document with id exists in table
         if document:
-            return document["queue"]
+            return document["queue"], document['name']
 
         return None
     
