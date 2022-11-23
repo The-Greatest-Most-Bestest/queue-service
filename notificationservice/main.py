@@ -6,6 +6,7 @@ import json
 
 from EmailNotifier import EmailNotifier
 from SMSNotifier import SMSNotifier
+from SMSNotifier_twilio import SMSNotifier_twilio
 
 class NotificationInfo:
     actions = [
@@ -73,6 +74,19 @@ email_notifier = EmailNotifier(
     region=config.get("aws", "aws_region")
 )
 
+sms_notifier = SMSNotifier(
+    key=config.get("aws", "aws_access_key_id"),
+    secret=config.get("aws", "aws_secret_access_key"),
+    region=config.get("aws", "aws_region")
+)
+
+sms_notifier_twilio = SMSNotifier_twilio(
+    acc_sid=config.get("twilio", "TWILIO_ACCOUNT_SID"),
+    auth_token=config.get("twilio", "TWILIO_AUTH_TOKEN"),
+    sender=config.get("twilio", "TWILIO_SENDER")
+)
+
+
 try:
     connection = pika.BlockingConnection(params)
     channel = connection.channel()
@@ -92,6 +106,14 @@ def handle_message(channel, method_frame, header_frame, body):
 
         with email_notifier:
             email_notifier.send(info)
+        
+        #SEND SMS1
+        with sms_notifier:
+            sms_notifier.send(info)
+
+        #SEND SMS2 (twilio)
+        with sms_notifier_twilio:
+            sms_notifier_twilio.send(info)
 
         # Do stuff here
     except:
