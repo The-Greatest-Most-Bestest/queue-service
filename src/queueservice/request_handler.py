@@ -9,7 +9,7 @@ class Handler:
 
     def enqueue(self, user, id):
         try:
-            queue, _ = self.proxy.get_queue_for_category(id)
+            queue, name = self.proxy.get_queue_for_category(id)
 
             for e in queue:
                 if e['id'] == user['id']:
@@ -20,6 +20,11 @@ class Handler:
 
             queue.append(user)
             self.proxy.update_queue_for_category(id, queue)
+
+            user['item'] = name
+
+            with self.publisher:
+                self.publisher.publish(user, action='RESERVED')
 
             return json.dumps({
                         "response": 200,
@@ -64,7 +69,7 @@ class Handler:
         }), 200
 
     def cancel(self, cid, uid):
-        queue, _ = self.proxy.get_queue_for_category(cid)
+        queue, name = self.proxy.get_queue_for_category(cid)
 
         if queue is None:
             return json.dumps({
@@ -84,6 +89,11 @@ class Handler:
 
         self.proxy.append_history(entry, "CANCELLED")
         self.proxy.update_queue_for_category(cid, queue)
+
+        entry['item'] = name
+
+        with self.publisher:
+            self.publisher.publish(entry, action='CANCELLED')
 
         return json.dumps({
             "response": 200,

@@ -10,7 +10,7 @@ from SMSNotifier_twilio import SMSNotifier_twilio
 
 class NotificationInfo:
     actions = [
-        'READY', 'QUEUED', 'CANCELLED'
+        'READY', 'RESERVED', 'CANCELLED'
     ]
 
     def __init__(self, user, email, phone, action, item=None):
@@ -43,7 +43,7 @@ class NotificationInfo:
                 logging.warning(f'Action ({action}) is not valid. Ignoring')
                 raise KeyError()
 
-            return NotificationInfo(user, email, phone, item)
+            return NotificationInfo(user, email, phone, action, item)
 
         except KeyError as e:
             logging.exception("Missing required info in JSON object from RMQ")
