@@ -20,6 +20,9 @@ class SMSNotifier:
                                      aws_secret_access_key=self.__secret
                                      )
 
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.__client = None
+
     def send(self, info):
         phone_number = info.phone
         message = 'Your queue is ready'
