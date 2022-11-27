@@ -81,8 +81,8 @@ sms_notifier = SMSNotifier(
 )
 
 sms_notifier_twilio = SMSNotifier_twilio(
-    acc_sid=config.get("twilio", "TWILIO_ACCOUNT_SID"),
-    auth_token=config.get("twilio", "TWILIO_AUTH_TOKEN"),
+    sid=config.get("twilio", "TWILIO_ACCOUNT_SID"),
+    token=config.get("twilio", "TWILIO_AUTH_TOKEN"),
     sender=config.get("twilio", "TWILIO_SENDER")
 )
 

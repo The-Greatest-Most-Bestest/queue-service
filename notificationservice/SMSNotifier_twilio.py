@@ -14,13 +14,13 @@ class SMSNotifier_twilio:
         self.__client = None
 
     def __enter__(self):
-        client = Client(self.__sid, self.__token)
+        self.__client = Client(self.__sid, self.__token)
     
     def send(self, info):
         phone_number = info.phone
         message = 'Your queue is ready'
 
-        text = client.messages.create(
+        text = self.__client.messages.create(
             body= message,
             from_= self.__sender,
             to= phone_number
