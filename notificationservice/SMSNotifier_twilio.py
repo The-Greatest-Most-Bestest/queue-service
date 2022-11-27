@@ -8,6 +8,18 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+def _format_txt(info):
+    if info.action == 'READY':
+        txt = f'Your {info.item} is ready for pickup.'
+    elif info.action == 'CANCELLED':
+        txt = f'You have cancelled your reservation for {info.item}.'
+    elif info.action == 'RESERVED':
+        txt = f'You have made a reservation for {info.item}.'
+    else:
+        logger.warning(f"Invalid notification action {info.action}")
+        raise ValueError(f"Invalid notification action {info.action}")
+
+    return txt
 
 class SMSNotifier_twilio:
     def __init__(self, sid, token, sender):
@@ -25,7 +37,7 @@ class SMSNotifier_twilio:
     
     def send(self, info):
         phone_number = info.phone
-        message = 'Your queue is ready'
+        message = _format_txt(info)
 
         text = self.__client.messages.create(
             body= message,
