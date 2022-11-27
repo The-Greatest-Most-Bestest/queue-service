@@ -3,6 +3,36 @@ import logging
 import boto3
 from botocore.exceptions import ClientError
 
+logger = logging.getLogger(__name__)
+
+
+def _format_html(info):
+    if info.action == 'READY':
+        html = open('templates/email_ready.template.html').read().format(info.name, info.item)
+    elif info.action == 'CANCELLED':
+        html = open('templates/email_cancelled.template.html').read().format(info.name, info.item)
+    elif info.action == 'RESERVED':
+        html = open('templates/email_reserved.template.html').read().format(info.name, info.item)
+    else:
+        logger.warning(f"Invalid notification action {info.action}")
+        raise ValueError(f"Invalid notification action {info.action}")
+
+    return html
+
+
+def _format_txt(info):
+    if info.action == 'READY':
+        txt = f'Your {info.item} is ready for pickup.'
+    elif info.action == 'CANCELLED':
+        txt = f'You have cancelled your reservation for {info.item}.'
+    elif info.action == 'RESERVED':
+        txt = f'You have made a reservation for {info.item}.'
+    else:
+        logger.warning(f"Invalid notification action {info.action}")
+        raise ValueError(f"Invalid notification action {info.action}")
+
+    return txt
+
 class EmailNotifier:
     def __init__(self, key, secret, region):
         self.__key = key
@@ -23,16 +53,8 @@ class EmailNotifier:
 
         subject = 'Your item is ready for pickup'
 
-        body_text = 'TBD'
-
-        body_html = """
-        <html>
-        <head></head>
-        <body>
-        <h1>TBD</h1>
-        </body>
-        </html>
-        """
+        body_text = _format_txt(info)
+        body_html = _format_html(info)
 
         charset = 'UTF-8'
 
@@ -62,6 +84,6 @@ class EmailNotifier:
                 Source=sender
             )
         except ClientError as e:
-            logging.exception(e)
+            logging.error(e.response['Error']['Message'])
         else:
             logging.info(f'Email sent! Message ID: {response["MessageId"]}')
