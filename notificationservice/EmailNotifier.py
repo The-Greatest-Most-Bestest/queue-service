@@ -42,7 +42,11 @@ class EmailNotifier:
         self.__client = None
 
     def __enter__(self):
-        self.__client = boto3.client('ses', region_name=self.__region)
+        self.__client = boto3.client('ses',
+                                     region_name=self.__region,
+                                     aws_access_key_id=self.__key,
+                                     aws_secret_access_key=self.__secret
+                                     )
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.__client = None
