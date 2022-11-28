@@ -1,4 +1,4 @@
-
+/* eslint-disable no-undef */
 // Global value to contain list of queue IDs
 var categoriesList;
 function getCategoryID() {
@@ -14,26 +14,26 @@ function getCategoryID() {
 			categoriesList = result.categories;
 
 			// create/update category drop down menu for the waitlist form and status
-			$('#NAME_NOT_IDENTIFIED').empty();
-			$('#NAME_NOT_IDENTIFIED').empty();
+			$('#category_id_cancel').empty();
+			$('#category_id_check').empty();
 			for (let i = 0; i < categoriesList.length; i++) {
 				let item_id = categoriesList[i].id;
 				let item_name = categoriesList[i].name;
 
 				let category_item_list =
 					"<option value='" + item_id + "'>" + item_name + '</option>';
-				$('#NAME_NOT_IDENTIFIED').append(category_item_list);
-				$('#NAME_NOT_IDENTIFIED').append(category_item_list);
+				$('#category_id_cancel').append(category_item_list);
+				$('#category_id_check').append(category_item_list);
 			}
 		},
 	});
 }
 
-function notify() {
+function checkin() {
     console.log('notify button clicked');
 
     // get input from notify form
-    var category_id = $('#NAME_NOT_IDENTIFIED').val();
+    var category_id = $('#category_id_check').val();
 
     console.log('Attempt to notify first person in category: ' +category_id);
 
@@ -56,8 +56,8 @@ function cancel() {
     console.log('cancel button clicked');
 
     // get input from cancel form
-    var category_id = $('#NAME_NOT_IDENTIFIED').val();
-    var uid = $('NAME_NOT_IDENTIFIED').val();
+    var category_id = $('#category_id_cancel').val();
+    var uid = $('category_id_cancel').val();
 
     console.log('Attempt to cancel ' +uid+ ' from category: ' +category_id);
 
@@ -78,5 +78,5 @@ function cancel() {
     });
 
     // Clear form
-    document.getElementById('NAME_NOT_IDENTIFIED').value = '';
+    document.getElementById('#uid').value = '';
 }

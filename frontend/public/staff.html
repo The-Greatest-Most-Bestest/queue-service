@@ -40,7 +40,7 @@
   ======================================================== -->
 </head>
 
-<body>
+<body onload="getCategoryID()">
     <main>
         <section id = "cancellation" class = "cancellation">
             <div class = "container">
@@ -52,12 +52,8 @@
                 <div>
 					<div class="mb-3">
 						<label for="item" class="form-label">Item</label>
-						<select id="category_id" class="form-select" required>
+						<select id="category_id_cancel" class="form-select" required>
 							<option value="2cda2c0a-e0f0-4a62-9352-3bfbe76ece41">Billiards</option>
-							<option value="147bda7c-ff1d-424a-abb9-0b76ea714d74">Consoles - Nintendo Switch</option>
-							<option value="7a08baeb-7380-4d76-a50f-f874543b397b">Consoles - PS4</option>
-							<option value="5be0be93-933f-4f11-8622-f6b3795a1c48">Consoles - XBox</option>
-							<option value="48d840c9-0485-4694-bc0c-68216d33acf7">Ping Pong</option>
 						</select>
 					</div>
 
@@ -66,7 +62,7 @@
 						<input type="text" id="uid" class="form-control" required />
 					</div>
 				
-					<button type="submit" onclick="waitlist()" class="btn btn-primary">Cancel</button>
+					<button type="submit" onclick="cancel()" class="btn btn-primary">Cancel</button>
 				</div>
 
             </div>
@@ -81,15 +77,11 @@
                 <div>
 					<div class="mb-3">
 						<label for="item" class="form-label">Item</label>
-						<select id="category_id" class="form-select" required>
+						<select id="category_id_check" class="form-select" required>
 							<option value="2cda2c0a-e0f0-4a62-9352-3bfbe76ece41">Billiards</option>
-							<option value="147bda7c-ff1d-424a-abb9-0b76ea714d74">Consoles - Nintendo Switch</option>
-							<option value="7a08baeb-7380-4d76-a50f-f874543b397b">Consoles - PS4</option>
-							<option value="5be0be93-933f-4f11-8622-f6b3795a1c48">Consoles - XBox</option>
-							<option value="48d840c9-0485-4694-bc0c-68216d33acf7">Ping Pong</option>
 						</select>
 					</div>
-					<button type="submit" onclick="waitlist()" class="btn btn-primary">Check-in</button>
+					<button type="submit" onclick="checkin()" class="btn btn-primary">Check-in</button>
 				</div>
 
             </div>
@@ -127,6 +119,7 @@
 
     <!-- Template Main JS File -->
     <script src="assets/js/main.js"></script>
+	<script src="assets/js/Staff.js"></script>
 </body>
 
 </html>
