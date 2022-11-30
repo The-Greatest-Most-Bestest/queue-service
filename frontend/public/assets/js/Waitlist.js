@@ -109,24 +109,24 @@ function waitlist() {
 					'. \nYou can also check under Waitlist Status to see your position in the waitlist.'
 			);
 
-			// render the result in the page
-			var waitlists = result;
-			for (let i = 0; i < categoriesList.length; i++) {
-				if (category_id === categoriesList[i].id) {
-					let item_name = categoriesList[i].name;
+			// // render the result in the page
+			// var waitlists = result;
+			// for (let i = 0; i < categoriesList.length; i++) {
+			// 	if (category_id === categoriesList[i].id) {
+			// 		let item_name = categoriesList[i].name;
 
-					// update the waitlist table
-					let v =
-						'<tr> <td>' +
-						item_name +
-						'</td> <td>' +
-						name +
-						'</td> <td>' +
-						waitlists.position +
-						'</td> </tr>';
-					$('#waitlist_table').append(v);
-				}
-			}
+			// 		// update the waitlist table
+			// 		let v =
+			// 			'<tr> <td>' +
+			// 			item_name +
+			// 			'</td> <td>' +
+			// 			name +
+			// 			'</td> <td>' +
+			// 			waitlists.position +
+			// 			'</td> </tr>';
+			// 		$('#waitlist_table').append(v);
+			// 	}
+			// }
 		},
 		// Failed to send HTTP request: user is already in the waitlist
 		error: function (result) {
@@ -146,39 +146,39 @@ function waitlist() {
 	document.getElementById('phone').value = '';
 }
 
-// Sort waitlist on a button click
-function sortTable() {
-	var table, i, x, y;
-	table = document.getElementById('waitlist_table');
-	var switching = true;
+// // Sort waitlist on a button click
+// function sortTable() {
+// 	var table, i, x, y;
+// 	table = document.getElementById('waitlist_table');
+// 	var switching = true;
 
-	// Run loop until no switching is needed
-	while (switching) {
-		switching = false;
-		var rows = table.rows;
+// 	// Run loop until no switching is needed
+// 	while (switching) {
+// 		switching = false;
+// 		var rows = table.rows;
 
-		// loop to go through all rows
-		for (i = 1; i < rows.length - 1; i++) {
-			var isSwitch = false;
+// 		// loop to go through all rows
+// 		for (i = 1; i < rows.length - 1; i++) {
+// 			var isSwitch = false;
 
-			// fetch 3 elemenst that need to be compared
-			x = rows[i].getElementsByTagName('td')[0];
-			y = rows[i + 1].getElementsByTagName('td')[0];
+// 			// fetch 3 elemenst that need to be compared
+// 			x = rows[i].getElementsByTagName('td')[0];
+// 			y = rows[i + 1].getElementsByTagName('td')[0];
 
-			// check if 3 rows need to be switched
-			if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-				// If yes, mark isSwitch as needed and break loop
-				isSwitch = true;
-				break;
-			}
-		}
-		if (isSwitch) {
-			// Function to switch rows and mark switching as completed
-			rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-			switching = true;
-		}
-	}
-}
+// 			// check if 3 rows need to be switched
+// 			if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+// 				// If yes, mark isSwitch as needed and break loop
+// 				isSwitch = true;
+// 				break;
+// 			}
+// 		}
+// 		if (isSwitch) {
+// 			// Function to switch rows and mark switching as completed
+// 			rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+// 			switching = true;
+// 		}
+// 	}
+// }
 
 // verify correct phone number format
 function validatePhoneNumber(input_str) {
