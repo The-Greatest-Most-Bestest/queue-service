@@ -30,7 +30,7 @@ class MongoAPI:
 
         # Check if document with id exists in table
         if document:
-            return document["queue"], document['name']
+            return document["queue"], document['queue_name']
 
         return None
     
