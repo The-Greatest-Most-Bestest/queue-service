@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 def _format_html(info):
     if info.action == 'READY':
-        html = open('templates/email_ready.template.html').read().format(info.name, info.item)
+        html = open('templates/email_ready.template.html').read().format(info.user, info.item)
     elif info.action == 'CANCELLED':
         html = open('templates/email_cancelled.template.html').read().format(info.name, info.item)
     elif info.action == 'RESERVED':
