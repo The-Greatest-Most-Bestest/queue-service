@@ -88,6 +88,6 @@ class EmailNotifier:
                 Source=sender
             )
         except ClientError as e:
-            logging.error(e.response['Error']['Message'])
+            logger.error(e.response['Error']['Message'])
         else:
-            logging.info(f'Email sent! Message ID: {response["MessageId"]}')
+            logger.info(f'Email sent! Message ID: {response["MessageId"]}')
