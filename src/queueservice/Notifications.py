@@ -42,5 +42,7 @@ class NotificationPublisher:
         if self.__connection:
             self.__connection.close()
 
-    def publish(self, message:dict):
+    def publish(self, message:dict, action='READY'):
+        message['action'] = action
+
         self.__channel.basic_publish(exchange='', routing_key=self.__queue, body=json.dumps(message))

@@ -1,7 +1,7 @@
 from request_handler import Handler
 import configparser
 from MongoDBProxy import MongoAPI
-from flask import Flask, request
+from flask import Flask, request, redirect
 from flask_cors import CORS
 import json
 from datetime import datetime
@@ -26,6 +26,12 @@ CT = {"Content-Type": "application/json"}
 
 app = Flask(__name__)
 CORS(app)
+
+
+@app.route('/')
+def root():
+    return redirect('http://www.cpp-queue.com/', code=302)
+
 
 @app.route('/add')
 def enqueue():
@@ -90,9 +96,9 @@ def cancel():
 
 @app.route('/check-in')
 def checkin():
-    item_id = request.args.get('id')
+    category_id = request.args.get('id')
 
-    resp, code = handler.checkin(item_id)
+    resp, code = handler.checkin(category_id)
 
     return resp, code, CT
 
