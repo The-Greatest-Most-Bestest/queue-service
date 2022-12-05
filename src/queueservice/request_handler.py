@@ -1,3 +1,5 @@
+import logging
+
 from MongoDBProxy import MongoAPI
 from Notifications import NotificationPublisher
 import json
@@ -23,8 +25,11 @@ class Handler:
 
             user['item'] = name
 
-            with self.publisher:
-                self.publisher.publish(user, action='RESERVED')
+            try:
+                with self.publisher:
+                    self.publisher.publish(user, action='RESERVED')
+            except Exception as e:
+                logging.exception(e)
 
             return json.dumps({
                         "response": 200,
@@ -87,13 +92,16 @@ class Handler:
 
         entry = queue.pop(pos)
 
-        self.proxy.append_history(entry, "CANCELLED")
-        self.proxy.update_queue_for_category(cid, queue)
-
         entry['item'] = name
 
-        with self.publisher:
-            self.publisher.publish(entry, action='CANCELLED')
+        try:
+            with self.publisher:
+                self.publisher.publish(entry, action='CANCELLED')
+        except Exception as e:
+            logging.exception(e)
+
+        self.proxy.append_history(entry, "CANCELLED")
+        self.proxy.update_queue_for_category(cid, queue)
 
         return json.dumps({
             "response": 200,
@@ -143,8 +151,12 @@ class Handler:
 
         next_user['item'] = name
 
-        with self.publisher:
-            self.publisher.publish(next_user)
+        try:
+            with self.publisher:
+                self.publisher.publish(next_user)
+        except Exception as e:
+            logging.exception(e)
+
 
         self.proxy.append_history(next_user, "NOTIFIED")
         self.proxy.update_queue_for_category(id, queue)
