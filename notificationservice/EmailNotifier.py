@@ -10,9 +10,9 @@ def _format_html(info):
     if info.action == 'READY':
         html = open('templates/email_ready.template.html').read().format(info.user, info.item)
     elif info.action == 'CANCELLED':
-        html = open('templates/email_cancelled.template.html').read().format(info.name, info.item)
+        html = open('templates/email_cancelled.template.html').read().format(info.user, info.item)
     elif info.action == 'RESERVED':
-        html = open('templates/email_reserved.template.html').read().format(info.name, info.item)
+        html = open('templates/email_reserved.template.html').read().format(info.user, info.item)
     else:
         logger.warning(f"Invalid notification action {info.action}")
         raise ValueError(f"Invalid notification action {info.action}")
@@ -55,7 +55,15 @@ class EmailNotifier:
         sender = "Do Not Reply <no-reply@notifications.cpp-queue.com>"
         recipient = info.email
 
-        subject = 'Your item is ready for pickup'
+        if info.action == 'READY':
+            subject = 'Your item is ready for pickup'
+        elif info.action == 'CANCELLED':
+            subject = 'You have cancelled your reservation'
+        elif info.action == 'RESERVED':
+            subject = 'You have made a reservation for an item'
+        else:
+            logger.warning(f"Invalid notification action {info.action}")
+            raise ValueError(f"Invalid notification action {info.action}")
 
         body_text = _format_txt(info)
         body_html = _format_html(info)

@@ -32,7 +32,7 @@ class MongoAPI:
         if document:
             return document["queue"], document['queue_name']
 
-        return None
+        return (None, None)
     
     # Replace the queue in the specified uuid with the queue_array
     def update_queue_for_category(self, id: uuid, queue_array: list):

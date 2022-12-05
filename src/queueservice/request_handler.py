@@ -47,7 +47,7 @@ class Handler:
         return -1
 
     def status(self, cid, uid):
-        queue = self.proxy.get_queue_for_category(cid)
+        queue, _ = self.proxy.get_queue_for_category(cid)
 
         if queue is None:
             return json.dumps({

@@ -123,18 +123,18 @@ def handle_message(channel, method_frame, header_frame, body):
         logger.info('Attempting to send an email via SES')
         with email_notifier:
             email_notifier.send(info)
-        
-        #SEND SMS1
-        logger.info('Attempting to send an SMS via SNS')
-        with sms_notifier:
-            sms_notifier.send(info)
 
-        #SEND SMS2 (twilio)
-        logger.info('Attempting to send an SMS via Twilio')
-        with sms_notifier_twilio:
-            sms_notifier_twilio.send(info)
+        if info.action == 'READY':
+            #SEND SMS1
+            logger.info('Attempting to send an SMS via SNS')
+            with sms_notifier:
+                sms_notifier.send(info)
 
-        # Do stuff here
+            #SEND SMS2 (twilio)
+            logger.info('Attempting to send an SMS via Twilio')
+            with sms_notifier_twilio:
+                sms_notifier_twilio.send(info)
+
     except Exception as e:
         logger.error('Something went wrong')
         logger.exception(e)
