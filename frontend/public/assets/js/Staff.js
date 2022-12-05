@@ -66,7 +66,7 @@ function cancel() {
         url:
             'http://cpp-queue.com/cancel?' + 
             'cid=' +category_id +
-            'uid=' +uid,
+            '&uid=' +uid,
         success: function(result) {
             console.log('Success!');
             alert(result);
