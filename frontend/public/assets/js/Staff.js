@@ -57,7 +57,7 @@ function cancel() {
 
     // get input from cancel form
     var category_id = $('#category_id_cancel').val();
-    var uid = $('category_id_cancel').val();
+    var uid = $('#uid').val();
 
     console.log('Attempt to cancel ' +uid+ ' from category: ' +category_id);
 
